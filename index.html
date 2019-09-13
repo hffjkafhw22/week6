@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>socketChat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  
+  </head>
+  <body>
+    <div class="container">
+      <div id="chatroom" class="row">
+        <div class="col-md-4">
+          <div class="jumbotron">
+           <h1>Users</h1>    
+           <ul class="list-group" id="users"></ul>
+        </div>
+        <div class="col-md-8">
+          <div class="chat" id="chat">
+          </div>
+          <form id="messageForm">
+            <div class="form-group">
+            <textarea class="form-control" id="message" placeholder="Enter Message"></textarea>
+              <input type="submit" class="btn btn-primary" value="ENTER" />          
+            </div>
+          </form>
+        </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+           const socket = io.connect();
+           const $messageForm = $('#messageForm');
+           const $message = $('#message');
+           const $chat = $('#chat');
+
+           $messageForm.submit(function(e){
+             e.preventDefault();
+             socket.emit('send message', $message.val());
+             $message.val('');
+           });
+
+           socket.on('new message', function(data){
+             $chat.append('<div>' + data.msg +'</div>');
+           });
+        });
+  
+    </script>
+  
+  </body>
+  
+  
+  <router-outlet></router-outlet>
+  </html>
